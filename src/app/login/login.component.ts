@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { HttpService } from '../services/http.service';
 
 @Component({
   selector: 'app-login',
@@ -9,16 +11,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup
-  submitted = false
-  onSubmit() {
-    this.submitted = true;
-    if (this.loginForm.invalid) {
-      return
-    }
-    alert("success");
-  }
-  constructor(private formBuilder: FormBuilder) { }
-  
+  submitted = false;
+  errorMsg = "";
+  constructor(private _auth: HttpService, private formBuilder: FormBuilder, private router: Router) { }
+
   ngOnInit(): void {
     //validation on when component initialize
     this.loginForm = this.formBuilder.group({
@@ -26,6 +22,24 @@ export class LoginComponent implements OnInit {
       password: ["", Validators.required]
     })
 
+  }
+  onSubmit() {
+    this.submitted = true;
+
+    if (this.loginForm.invalid) {
+      return
+    }
+    this._auth.loginUser(this.loginForm.value).subscribe((res) => {
+      this.errorMsg = ""
+      if (res.status === "success") {
+        this.loginForm.reset();
+        this.router.navigate(["profile"])
+      } else {
+        this.errorMsg = res.message;
+      }
+    });
+
+    alert("success");
   }
 
 }

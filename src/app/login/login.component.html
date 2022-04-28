@@ -20,6 +20,8 @@
                 Password is required
             </div>
         </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+        <button [disabled]="!loginForm.valid" class="w-100 btn btn-lg btn-primary" type="submit">Sign
+            in</button>
+        <div *ngIf="errorMsg" class="text-danger">{{errorMsg}}</div>
     </form>
 </main>

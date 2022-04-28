@@ -2,17 +2,16 @@
     <form class="w-50 mx-auto" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         <h1 class="h3 mb-3 fw-normal text-center">Create Account</h1>
         <div class="form-floating mb-2">
-            <input type="text" formControlName="username"
-                [ngClass]="{'is-invalid':submitted && registerForm.controls['username'].errors}" class="form-control"
-                id="username" placeholder="username">
-            <label for="username">Username</label>
-            <div *ngIf="submitted && registerForm.controls?.['username']?.errors">
-                <div *ngIf="submitted && registerForm.controls?.['username']?.errors?.['required']" class="text-danger">
-                    Username is required
+            <input type="text" formControlName="name"
+                [ngClass]="{'is-invalid':submitted && registerForm.controls['name'].errors}" class="form-control"
+                id="name" placeholder="Name">
+            <label for="name">Name</label>
+            <div *ngIf="submitted && registerForm.controls?.['name']?.errors">
+                <div *ngIf="submitted && registerForm.controls?.['name']?.errors?.['required']" class="text-danger">
+                    Name is required
                 </div>
-                <div *ngIf="submitted && registerForm.controls?.['username']?.errors?.['minlength']"
-                    class="text-danger">
-                    Username should be atleat 3 character
+                <div *ngIf="submitted && registerForm.controls?.['name']?.errors?.['minlength']" class="text-danger">
+                    Name should be atleat 3 character
                 </div>
             </div>
         </div>
@@ -56,6 +55,9 @@
                 <input type="checkbox" value="remember-me"> Remember me
             </label>
         </div> -->
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign Up</button>
+        <button [disabled]="!registerForm.valid" class="w-100 btn btn-lg btn-primary" type="submit">Sign Up</button>
+        <div *ngIf="errorMsg" class="text-danger">
+            {{errorMsg}}
+        </div>
     </form>
 </main>
