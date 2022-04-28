@@ -1,10 +1,9 @@
 import jwt from "jsonwebtoken";
 import UserModel from "../models/User.js";
-var checkUserAuth = async(req, res, next) => {
-
+var checkUserAuth = async (req, res, next) => {
     const { cookies } = req;
     if ("token" in cookies) {
-        console.log("session id exists", cookies);
+        console.log("token is exists", cookies);
         try {
             const { signID } = jwt.verify(cookies.token, process.env.JWT_SECRET_KEY);
             res.user = await UserModel.findById(signID).select("-password");
