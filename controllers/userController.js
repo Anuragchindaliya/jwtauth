@@ -8,7 +8,7 @@ class UserController {
         if (name && email && password && password_confirmation) {
             if (password === password_confirmation) {
                 const user = await UserModel.findOne({ email: email });
-             
+
                 if (user === null) {
                     try {
                         const salt = await bcrypt.genSalt(10)
@@ -22,8 +22,8 @@ class UserController {
                         const saved_user = await UserModel.findOne({ email: email })
                         // genrate jwt token
                         const token = jwt.sign({ signID: saved_user._id }, process.env.JWT_SECRET_KEY, { expiresIn: "5d" });
-
-                        res.status(201).send({ "status": "success", "message": "Registration success", token })
+                        res.cookie("token", token);
+                        res.status(201).json({ status: "success", message: "Registration success" })
                     } catch (error) {
                         console.log(error);
                         res.send({ "status": "failes", "message": "unable to register" })
@@ -50,6 +50,8 @@ class UserController {
                 if (user !== null) {
                     const isMatch = await bcrypt.compare(password, user.password)
                     if (email === user.email && isMatch) {
+                        const token = jwt.sign({ signID: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: "5d" });
+                        res.cookie("token", token);
                         res.send({ "status": "success", "message": "Login success" });
                     } else {
                         res.send({ "status": "failed", "message": "Email or Password is not Valid" })
@@ -64,6 +66,13 @@ class UserController {
             console.log(error);
             res.send({ "status": "failed", "message": "unable to login" })
         }
+    }
+
+    static getUserData = (req, res) => {
+        res.status(200).json({ status: "success", message: "Your are Authorized" });
+    }
+    static userLogout = (req, res) => {
+        res.clearCookie("token").json({ status: "success", message: "Logout successfully" })
     }
 }
 

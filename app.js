@@ -4,6 +4,7 @@ import express from 'express';
 import connectDB from "./config/connectdb.js";
 import cors from "cors";
 import userRoutes from "./routes/userRoutes.js"
+import cookieParser from "cookie-parser";
 
 
 
@@ -15,8 +16,12 @@ app.use(cors());
 //database connection
 connectDB(DATABASE_URL);
 
+//parses cookies attached to the client request object
+app.use(cookieParser());
+
 // JSON
-app.use(express.json())
+app.use(express.json());
+
 
 app.use("/api/user", userRoutes)
 
