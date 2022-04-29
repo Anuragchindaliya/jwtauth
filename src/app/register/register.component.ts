@@ -21,11 +21,16 @@ export class RegisterComponent implements OnInit {
     }
     )
   }
+  
 
   onSubmit() {
     this.submitted = true;
+    if (this.registerForm.invalid) {
+      return
+    }
+
     this._auth.registerUser(this.registerForm.value).subscribe((res) => {
-      this.errorMsg = ""
+      this.errorMsg = "";
       if (res.status === "success") {
         this.registerForm.reset();
         this.router.navigate(["profile"])
