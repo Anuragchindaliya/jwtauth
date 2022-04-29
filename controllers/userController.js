@@ -49,7 +49,7 @@ class UserController {
                     if (email === user.email && isMatch) {
                         const token = jwt.sign({ signID: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: "5d" });
                         res.cookie("token", token);
-                        res.send({ "status": "success", "message": "Login success" });
+                        res.send({ "status": "success", "message": "Login success", "token": token });
                     } else {
                         res.send({ "status": "failed", "message": "Email or Password is not Valid" })
                     }
@@ -70,6 +70,29 @@ class UserController {
     }
     static userLogout = (req, res) => {
         res.clearCookie("token").json({ status: "success", message: "Logout successfully" })
+    }
+
+    static checkAuth = async (req, res) => {
+        const { authorization } = req.headers
+        if (authorization && authorization.startsWith('Bearer')) {
+            try {
+                // Get Token from header
+                let token = authorization.split(' ')[1]
+
+                // Verify Token
+                const { userID } = jwt.verify(token, process.env.JWT_SECRET_KEY)
+
+                // Get User from Token
+                await UserModel.findById(userID)
+                res.json({ status: "success", message: "Your are Authorized" });
+            } catch (error) {
+                console.log(error)
+                res.status(403).send({ "status": "failed", "message": "Unauthorized User" })
+            }
+        } else {
+            res.status(403).send({ "status": "failed", "message": "Unauthorized User, No Token" })
+        }
+
     }
 }
 
