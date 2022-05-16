@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
       }
     });
 
-    alert("success");
+    // alert("success");
   }
 
 }

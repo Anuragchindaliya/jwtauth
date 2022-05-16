@@ -8,7 +8,6 @@ import { HttpService } from '../services/http.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-
   registerForm!: FormGroup
   submitted = false;
   errorMsg = "";
@@ -21,7 +20,6 @@ export class RegisterComponent implements OnInit {
     }
     )
   }
-  
 
   onSubmit() {
     this.submitted = true;
@@ -33,7 +31,7 @@ export class RegisterComponent implements OnInit {
       this.errorMsg = "";
       if (res.status === "success") {
         this.registerForm.reset();
-        this.router.navigate(["profile"])
+        this.router.navigate(["login"])
       } else {
         console.log(res.message)
         this.errorMsg = res.message;
